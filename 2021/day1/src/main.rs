@@ -10,7 +10,7 @@ fn parse(buf: &mut BufReader<File>) -> Result<Vec<u64>, Box<dyn std::error::Erro
     Ok(depths)
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>>{
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let input = File::open("input.txt")?;
     let mut reader = BufReader::new(input);
 

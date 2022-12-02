@@ -91,8 +91,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         commands.push(cmd);
     }
 
-    //println!("{:?}", commands);
-
     let mut horizontal_pos = 0;
     let mut depth = 0;
 
