@@ -1,12 +1,6 @@
 use std::fs::read_to_string;
 
 fn parse_calories(input: &str) -> Vec<u32> {
-    // let calories: Vec<u32> = input
-    //     .lines()
-    //     .filter(|&lines| !lines.is_empty())
-    //     .map(|line| line.parse::<u32>().unwrap())
-    //     .collect();
-
     let calories: Vec<u32> = input
         .lines()
         .fold(Vec::new(), |mut acc, x| {
@@ -22,9 +16,6 @@ fn parse_calories(input: &str) -> Vec<u32> {
         .into_iter()
         .map(|x| x.into_iter().reduce(|acc, item|  acc + item).unwrap())
         .collect(); 
-       
-
-        // .reduce(|acc, item| if acc >= item { acc } else { item })
 
     calories
 }
@@ -32,7 +23,6 @@ fn parse_calories(input: &str) -> Vec<u32> {
 fn calculate_highest_calories(calories: &Vec<u32>) -> &u32 {
     calories
         .into_iter()
-        // .reduce(|acc, item| if acc >= item { acc } else { item })
         .max()
         .unwrap()
 }
