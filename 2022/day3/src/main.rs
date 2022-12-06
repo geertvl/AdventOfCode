@@ -3,10 +3,11 @@ use std::{fs::File, io::{BufReader, BufRead}};
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let input = File::open("input.txt")?;
     let reader = BufReader::new(input);
+    let lines: Vec<String> = reader.lines().map(|line| line.unwrap()).collect();
 
-    let sums: u32 = calculate_total_score(&mut reader);
+    let sums: u32 = calculate_total_score(&lines);
 
-    let total_badge_score = calculate_badge_score(&mut reader);
+    let total_badge_score = calculate_badge_score(&lines);
 
     println!("Sum: {}", sums);
     println!("Badge: {}", total_badge_score);
@@ -15,19 +16,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 
-fn calculate_badge_score(buf: &mut BufReader<File>) -> u32 {
-    let group = buf.lines().take(3).;
-    while group.is_none {
+fn calculate_badge_score(lines: &Vec<String>) -> u32 {
+    let badges = lines.chunks(3).map(|chunk| {
+        find_same_in_group(chunk)
+    }).collect::<Vec<char>>();
 
-
-    }
-
-    0
+    calculate_item_score(badges)
 }
 
-fn calculate_total_score(buf: &mut BufReader<File>) -> u32 {
-    buf.lines().map(|line| {
-        let same_items = find_same_items_in_compartments(line.unwrap().as_str());
+fn find_same_in_group(group: &[String]) -> char {
+    group[0]
+        .chars()
+        .filter(|c| group[1].chars().any(|d1| c == &d1) && group[2].chars().any(|d2| c == &d2))
+        .nth(0)
+        .unwrap()
+}
+
+fn calculate_total_score(lines: &Vec<String>) -> u32 {
+    lines.iter().map(|line| {
+        let same_items = find_same_items_in_compartments(line.as_str());
         let score = calculate_item_score(same_items);
         score
     }).sum()
@@ -61,6 +68,39 @@ fn calculate_item_score(doubles: Vec<char>) -> u32  {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn chunk_3_items() {
+        let input: Vec<&str> = vec![
+            "vJrwpWtwJgWrhcsFMMfFFhFp",
+            "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL",
+            "PmmdzqPrVvPwwTWBwg",
+            "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn",
+            "ttgJtRGJQctTZtZT",
+            "CrZsJsPPZsGzwwsLwLmpwMDw"
+        ];
+
+        let split: Vec<&[&str]> = input
+            .chunks(3).collect();
+
+        assert_eq!(2, split.len());
+    }
+
+    #[test]
+    fn chunk_mapping() {
+        let input: Vec<&str> = vec![
+            "vJrwpWtwJgWrhcsFMMfFFhFp",
+            "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL",
+            "PmmdzqPrVvPwwTWBwg",
+            "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn",
+            "ttgJtRGJQctTZtZT",
+            "CrZsJsPPZsGzwwsLwLmpwMDw"
+        ];
+
+        let chars: Vec<char> = input.chunks(3).map(|_| 'a').collect();
+
+        assert_eq!(2, chars.len());
+    }
 
     #[test]
     fn same_identifier() {
@@ -100,5 +140,40 @@ mod tests {
         let total = calculate_item_score(double_items);
 
         assert_eq!(16, total);
+    }
+
+    #[test]
+    fn find_same_in_1_group() {
+        let input: [String; 3] = [
+            "vJrwpWtwJgWrhcsFMMfFFhFp".to_string(),
+            "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL".to_string(),
+            "PmmdzqPrVvPwwTWBwg".to_string(),
+        ];
+
+        let result = find_same_in_group(&input);
+
+        assert_eq!('r', result);
+    }
+
+    #[test]
+    fn find_same_in_2_groups() {
+        let input: [String; 6] = [
+            "vJrwpWtwJgWrhcsFMMfFFhFp".to_string(),
+            "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL".to_string(),
+            "PmmdzqPrVvPwwTWBwg".to_string(),
+            "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn".to_string(),
+            "ttgJtRGJQctTZtZT".to_string(),
+            "CrZsJsPPZsGzwwsLwLmpwMDw".to_string()
+        ];
+
+        let badges = input.chunks(3).map(|chunk| {
+            find_same_in_group(chunk)
+        }).collect::<Vec<char>>();
+
+        assert_eq!('r', badges[0]);
+        assert_eq!('Z', badges[1]);
+
+        let score = calculate_item_score(badges);
+        assert_eq!(70, score);
     }
 }
