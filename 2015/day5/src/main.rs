@@ -1,23 +1,3 @@
-<<<<<<< HEAD
-fn main() {
-    println!("Hello, world!");
-}
-
-fn contains_three_vowels()
-
-#[allow(dead_code)]
-fn is_nice_string(str: &str) -> bool {
-    const VOWELS:[char;5] = ['a', 'e', 'i', 'o', 'u'];
-    let s: String = str.to_owned();
-    let mut chars: Vec<char> = s[..]
-        .chars()
-        .collect();
-    chars
-        .sort_by(|a, b| b.cmp(a));
-    println!("test={:?}", chars);
-
-    true
-=======
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -95,7 +75,6 @@ fn main() {
     }
 
     println!("{} strings are nice.", counter);
->>>>>>> 62770baa624d963aa57017153481c6beb96e01f5
 }
 
 #[cfg(test)]
@@ -103,14 +82,6 @@ mod tests {
     use super::*;
 
     #[test]
-<<<<<<< HEAD
-    fn test_three_vowels() {
-        assert!(is_nice_string("aei"));
-        assert!(is_nice_string("xazegov"));
-        assert!(is_nice_string("aeiouaeiouaeiou"));
-    }
-}
-=======
     fn has_two_same_chars_in_a_row() {
         let input = "bbac";
         let result = has_twice_in_row(&input.to_string());
@@ -172,8 +143,4 @@ mod tests {
         let result = is_nice_string(&input.to_string());
         assert_eq!(result, false);
     }
-
-    #[test]
-    fn 
 }
->>>>>>> 62770baa624d963aa57017153481c6beb96e01f5
